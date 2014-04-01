@@ -15,11 +15,14 @@ public class CIAScraper {
 	public static void main(String[] args) {
 		System.out.println("Welcome to the CIA Scraper!");
 		
-		//create a list of all the country codes listed on the CIA website
-		LinkedList<String> countryCodes = GetCountries.getCountryCodes("https://www.cia.gov/library/publications/the-world-factbook/appendix/appendix-d.html");
+		String ciaUrl = "https://www.cia.gov/library/publications/the-world-factbook/appendix/appendix-d.html";
 		
-		//create a hashmap that links each country code to its country
-		HashMap<String, String> countryCodeToCountry = GetCountries.abbrevsToCountries("https://www.cia.gov/library/publications/the-world-factbook/appendix/appendix-d.html");
+		//create a list of all the country codes listed on the CIA website
+		//initialize it to nothing
+		LinkedList<String> countryCodes = new LinkedList<String>();
+		
+		//create a hashmap that links each country code to its country. also update the linked list of country codes
+		HashMap<String, String> countryCodeToCountry = GetCountries.getCountries(ciaUrl, countryCodes, ciaUrl);
 		
 		//ask the user what he wants to do
 		AskUser.askUserForInput(countryCodes);
