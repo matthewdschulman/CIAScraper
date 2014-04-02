@@ -38,8 +38,7 @@ public class Hemispheres {
 			String pageHtml = countryPage.html();
 		
 			//the southeastern hemisphere is defined by S latitudes and E longitudes
-			String template = regex;
-			Pattern p = Pattern.compile(template);
+			Pattern p = Pattern.compile(regex);
 			
 			Matcher m = p.matcher(pageHtml);
 			
