@@ -1,9 +1,10 @@
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Scanner;
 
 
 public class Reset {
-	public static void reset(LinkedList<String> countryCodes) {
+	public static void reset(LinkedList<String> countryCodes, HashMap<String, String> countryCodeToCountry) {
 		//determine if user desires to do a new search
 		System.out.println("Would you like to do another query? Please enter 'yes' or 'no'");
 		Scanner user_input = new Scanner(System.in);
@@ -14,7 +15,7 @@ public class Reset {
 		}
 		
 		//else, ask user for new search
-		AskUser.askUserForInput(countryCodes);
+		AskUser.askUserForInput(countryCodes, countryCodeToCountry);
 		
 	}
 }

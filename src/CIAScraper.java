@@ -13,8 +13,10 @@ import java.util.Scanner;
 
 public class CIAScraper {
 	public static void main(String[] args) {
-		System.out.println("Welcome to the CIA Scraper!");
+		System.out.println("Welcome to the CIA Scraper! Please wait 3 seconds...");
 		
+		//print out an extra line for stylistic purposes
+		System.out.println("");
 		String ciaUrl = "https://www.cia.gov/library/publications/the-world-factbook/appendix/appendix-d.html";
 		
 		//create a list of all the country codes listed on the CIA website
@@ -25,6 +27,6 @@ public class CIAScraper {
 		HashMap<String, String> countryCodeToCountry = GetCountries.getCountries(ciaUrl, countryCodes, ciaUrl);
 		
 		//ask the user what he wants to do
-		AskUser.askUserForInput(countryCodes);
+		AskUser.askUserForInput(countryCodes, countryCodeToCountry);
 	}
 }

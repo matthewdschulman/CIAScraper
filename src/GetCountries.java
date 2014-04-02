@@ -23,9 +23,9 @@ public class GetCountries {
 				if (htmlArr[i].contains("../geos/")) {
 					String twoLetterCode = htmlArr[i].substring(15, 17);
 					countryCodes.add(twoLetterCode);
-					//htmlArr[i+1] is the full country name
-					codeToCountry.put(twoLetterCode, htmlArr[i+1]);
-					System.out.println(twoLetterCode + " " + htmlArr[i+1]);
+					//find the full country name
+					String fullName = getFullName(htmlArr, i+1);
+					codeToCountry.put(twoLetterCode, fullName);
 				}
 				if (htmlArr[i].contains("</select>")) {
 					break;
@@ -41,6 +41,22 @@ public class GetCountries {
 		return codeToCountry;
 		
 		
+	}
+
+	private static String getFullName(String[] htmlArr, int i) {
+		String fullName = "";
+		boolean firstLoop = true;
+		while (!htmlArr[i].equals("</option>")) {
+			if (!firstLoop) {
+				fullName += " ";
+			}
+			else {
+				firstLoop = false;
+			}
+			fullName += htmlArr[i];
+			i++;
+		}
+		return fullName;
 	}
 
 	private static void removeJunk(HashMap<String, String> codeToCountry) {
