@@ -61,11 +61,11 @@ public class AskUser {
 				
 		//STILL HAVE TO MAKE THIS CODE MORE AGILE!
 		if (researchTopic.equals("earthquakes")) {
-			FindAnswers.earthquakes(countryCodes, countryCodeToCountry);
+			Earthquakes.findEarthquakes(countryCodes, countryCodeToCountry);
 		}
 		
 		if (researchTopic.equals("ep")) {
-			FindAnswers.elevationPoint(userRegion, numOfCountries, highOrLow, countryCodes, countryCodeToCountry);
+			ElevationPoint.findElevationPoint(userRegion, numOfCountries, highOrLow, countryCodes, countryCodeToCountry);
 		}
 		
 		
