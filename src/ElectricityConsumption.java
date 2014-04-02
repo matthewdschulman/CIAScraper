@@ -45,7 +45,7 @@ public class ElectricityConsumption {
 		}
 		//print out the results
 		for (int i = 0; i < 5; i++) {
-			System.out.println(i + ": " + topNations[i] + " with " + trackingTopNations.get(topNations[i]) + " kWh per person");
+			System.out.println((i+1) + ": " + topNations[i] + " with " + trackingTopNations.get(topNations[i]) + " kWh per person");
 		}
 		
 		//reset
