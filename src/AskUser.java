@@ -13,7 +13,8 @@ public class AskUser {
 		System.out.println("'ep' for  elevation points or...");
 		System.out.println("'hemispheres' for hemispheres or...");
 		System.out.println("'pp' for political parties or...");
-		System.out.println("'ec' for electricity consumption per capita");
+		System.out.println("'ec' for electricity consumption per capita or...");
+		System.out.println("'religion' for countries with dominant religions");
 		String researchTopic = user_input.nextLine();
 		
 		if (researchTopic.equals("ec")) {
@@ -23,8 +24,23 @@ public class AskUser {
 			if (userResponse.equals("n")) {
 				System.out.println("Sorry--please email matthewdschulman@gmail.com to request"
 						+ "your query.");
+				Reset.reset(countryCodes, countryCodeToCountry);		
 			}
 			ElectricityConsumption.getTopECCountries(countryCodes, countryCodeToCountry);
+		}
+		
+		if (researchTopic.equals("religion")) {
+			System.out.println("Would you like to find 1) countries in which a dominant "
+					+ "religion accounts for more than 80% of the population and "
+					+ "2) countries in which a dominant religion accounts for less than 50% of the population? "
+					+ "Please enter 'y' or 'n'");
+			String userResponse = user_input.nextLine();
+			if (userResponse.equals("n")) {
+				System.out.println("Sorry--please email matthewdschulman@gmail.com to request"
+						+ "your query.");
+				Reset.reset(countryCodes, countryCodeToCountry);		
+			}
+			Religion.getDominantReligionCountries(countryCodes, countryCodeToCountry);			
 		}
 		
 		String hemisphere = "";
