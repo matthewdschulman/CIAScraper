@@ -11,7 +11,8 @@ public class AskUser {
 		//determine user's interest
 		System.out.println("What would you like to research? Please enter 'earthquakes' for earthquakes or...");
 		System.out.println("'ep' for  elevation points or...");
-		System.out.println("'hemispheres' for hemispheres");
+		System.out.println("'hemispheres' for hemispheres or...");
+		System.out.println("'pp' for political parties.");
 		String researchTopic = user_input.nextLine();
 		
 		String hemisphere = "";
@@ -29,8 +30,33 @@ public class AskUser {
 			System.out.println("Which region would you like to consider?");
 			System.out.println("Please enter 'SA' for South America or...");
 			System.out.println("'SH' for southern hemisphere or...");
-			System.out.println("'E' for Europe");
+			System.out.println("'E' for Europe or...");
+			System.out.println("'A' for Asia");
 			userRegion = user_input.nextLine();	
+		}
+		
+		//update userRegion to match with the cia's style
+		if (userRegion.equals("E")) {
+			userRegion = "region_eur";
+		}
+		if (userRegion.equals("SA")) {
+			userRegion = "region_soa";
+		}
+		
+		if (userRegion.equals("A")) {
+			userRegion = "Asia";
+		}
+		
+		if (researchTopic.equals("pp")) {
+			System.out.println("Are you happy with searching for the top 10 political "
+					+ "parties in "+userRegion+" ? Please enter 'y' or 'n'.");
+			String userResponse = user_input.nextLine();
+			if (userResponse.equals("n")) {
+				System.out.println("Sorry--please email matthewdschulman@gmail.com to request"
+						+ "your query.");
+				Reset.reset(countryCodes, countryCodeToCountry);
+			}
+			Political.getPoliticalParties(userRegion, countryCodes, countryCodeToCountry);
 		}
 		
 		//determine the scope of countries the user wants to consider
@@ -66,13 +92,7 @@ public class AskUser {
 			}
 		}
 		
-		//update userRegion to match with the cia's style
-		if (userRegion.equals("E")) {
-			userRegion = "region_eur";
-		}
-		if (userRegion.equals("SA")) {
-			userRegion = "region_soa";
-		}
+		
 				
 		//STILL HAVE TO MAKE THIS CODE MORE AGILE!
 		if (researchTopic.equals("earthquakes")) {

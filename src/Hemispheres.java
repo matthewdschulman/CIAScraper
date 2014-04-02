@@ -17,19 +17,20 @@ public class Hemispheres {
 		}
 		System.out.println("Please wait a moment...the countries in the " + hemisphere + " hemisphere are...");
 		for (String country : countryCodes) {
-			String northSouth = northOrSouth(country);
+			String northSouth = getDirection(country, "vertical-align:top;\">\\d*\\s\\d*\\s(\\w)");
 			if (northSouth.equals("")) {
-				northSouth = northOrSouthNoCapital(country);
+				northSouth = getDirection(country, "\\d+\\s\\d+\\s(\\w),");
 			}
 						
-			String eastOrWest = eastOrWest(country);
+			String eastOrWest = getDirection(country, ",\\s\\d*\\s\\d*\\s(\\w)");
 			if (northSouth.equals("S") && eastOrWest.equals("E")) {
 				System.out.println(countryCodeToCountry.get(country));
 			}
-		}			
+		}	
+		Reset.reset(countryCodes, countryCodeToCountry);	
 	}
 	
-	private static String northOrSouth(String country) {
+	private static String getDirection(String country, String regex) {
 		String curCountryURL = "https://www.cia.gov/library/publications/the-world-factbook/geos/countrytemplate_"
 				+ country + ".html";
 		try {
@@ -37,7 +38,7 @@ public class Hemispheres {
 			String pageHtml = countryPage.html();
 		
 			//the southeastern hemisphere is defined by S latitudes and E longitudes
-			String template = "vertical-align:top;\">\\d*\\s\\d*\\s(\\w)";
+			String template = regex;
 			Pattern p = Pattern.compile(template);
 			
 			Matcher m = p.matcher(pageHtml);
@@ -52,53 +53,4 @@ public class Hemispheres {
 		}
 		return "";
 	}
-	
-	private static String northOrSouthNoCapital(String country) {
-		String curCountryURL = "https://www.cia.gov/library/publications/the-world-factbook/geos/countrytemplate_"
-				+ country + ".html";	
-		try {
-			Document countryPage = Jsoup.connect(curCountryURL).get();
-			String pageHtml = countryPage.html();
-		
-			//the southeastern hemisphere is defined by S latitudes and E longitudes
-			String template = "\\d+\\s\\d+\\s(\\w),";
-			Pattern p = Pattern.compile(template);
-			
-			Matcher m = p.matcher(pageHtml);
-			
-			if (m.find()) {				
-				return m.group(1);
-			}
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return "";
-	}
-	
-	private static String eastOrWest(String country) {
-		String curCountryURL = "https://www.cia.gov/library/publications/the-world-factbook/geos/countrytemplate_"
-				+ country + ".html";		
-		try {
-			Document countryPage = Jsoup.connect(curCountryURL).get();
-			String pageHtml = countryPage.html();
-		
-			//the southeastern hemisphere is defined by S latitudes and E longitudes
-			String template = ",\\s\\d*\\s\\d*\\s(\\w)";
-			Pattern p = Pattern.compile(template);
-			
-			Matcher m = p.matcher(pageHtml);
-			
-			if (m.find()) {
-				return m.group(1);
-			}
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return "";
-	}
-
 }

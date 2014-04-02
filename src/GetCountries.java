@@ -68,6 +68,7 @@ public class GetCountries {
 		codeToCountry.remove("xq");	
 		codeToCountry.remove("zh");	
 		codeToCountry.remove("io");	
+		codeToCountry.remove("xo");	
 	}
 
 	private static void removeJunk(LinkedList<String> countryCodes) {
@@ -79,5 +80,6 @@ public class GetCountries {
 		countryCodes.remove("xq");
 		countryCodes.remove("zh");
 		countryCodes.remove("io");
+		countryCodes.remove("xo");
 	}
 }
