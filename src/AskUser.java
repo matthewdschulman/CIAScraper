@@ -18,9 +18,7 @@ public class AskUser {
 		System.out.println("Please enter 'SA' for South America or...");
 		System.out.println("'SH' for southern hemisphere or...");
 		System.out.println("'E' for Europe");
-		String userRegion = user_input.nextLine();
-		
-		
+		String userRegion = user_input.nextLine();		
 		
 		//determine the scope of countries the user wants to consider
 		System.out.println("How many countries do you want to consider from " + userRegion + "?");
@@ -67,9 +65,7 @@ public class AskUser {
 		if (researchTopic.equals("ep")) {
 			ElevationPoint.findElevationPoint(userRegion, numOfCountries, highOrLow, countryCodes, countryCodeToCountry);
 		}
-		
-		
-		
+			
 	}
 
 }
