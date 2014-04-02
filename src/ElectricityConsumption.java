@@ -13,6 +13,8 @@ public class ElectricityConsumption {
 
 	public static void getTopECCountries(LinkedList<String> countryCodes,
 			HashMap<String, String> countryCodeToCountry) {	
+		System.out.println("Please wait for a moment...");
+		
 		String[] topNations = new String[5];
 		
 		//create hashmap for highest nations
@@ -25,19 +27,9 @@ public class ElectricityConsumption {
 			//if data was extracted for elecConsump
 			if (elecConsump > 0) {
 				int population = getPopulation(country);
-				elecConsumpPerPop = elecConsump / ((float) population);
-			}
-			
-			System.out.println(countryCodeToCountry.get(country) + ": " + getElecConsump(country));
-			
-			//for first country edge case			
-			if (topNations[0] == null) {
-				trackingTopNations.put(countryCodeToCountry.get(country), elecConsumpPerPop);
-				topNations[0] = countryCodeToCountry.get(country);
-			}
-						
-			else {
-				//for case that there are fewer than 5 countries on the leaderboard
+				elecConsumpPerPop = elecConsump / ((float) population);				
+				
+				//if the leaderboard is not full, enter the country no matter what
 				if (topNations[4] == null) {
 					insertCountry(country, countryCodeToCountry, topNations, 
 							trackingTopNations, elecConsumpPerPop);
@@ -48,10 +40,14 @@ public class ElectricityConsumption {
 						insertCountry(country, countryCodeToCountry, topNations, 
 								trackingTopNations, elecConsumpPerPop);
 					}
-				}
-				
+				}		
 			}
 		}
+		//print out the results
+		for (int i = 0; i < 5; i++) {
+			System.out.println(i + ": " + topNations[i] + " with " + trackingTopNations.get(topNations[i]) + " kWh per person");
+		}
+		
 		//reset
 		Reset.reset(countryCodes, countryCodeToCountry);
 	}
@@ -71,6 +67,8 @@ public class ElectricityConsumption {
 				}
 				topNations[i] = countryCodeToCountry.get(country);
 				trackingTopNations.put(countryCodeToCountry.get(country), elecConsumpPerPop);
+				//we've inserted the country, break the loop
+				break;
 			}
 		}		
 	}
@@ -116,7 +114,6 @@ public class ElectricityConsumption {
 				if (elecNumber.contains(",")) {
 					elecNumber = elecNumber.replace("," , "");
 				}
-				System.out.println(Float.parseFloat(elecNumber)*multFactor);
 				return Float.parseFloat(elecNumber)*multFactor;
 			}			
 			return -1;
@@ -134,21 +131,21 @@ public class ElectricityConsumption {
 		// TODO Auto-generated method stub
 		String curCountryURL = "https://www.cia.gov/library/publications/the-world-factbook/geos/countrytemplate_"
 				+ country + ".html";
+		//atypical format for country ax: account for this edge case below
+		if (country.equals("ax")) {
+			return 15700;
+		}
 		try {
 			Document countryPage = Jsoup.connect(curCountryURL).get();
 			String pageHtml = countryPage.html();
 		
-			//get the section of the html that contains political party info and include enough
-			//lines for 11 political parties (if the country has 11+)
-			String template = "(Population:</a>\\s*.*\\s*.*\\s*.*\\s*.*\\s*.*\\s*<div\\sclass=\"category_data\">\\d*,\\d*\\s)";
+			String template = "Population:</a>\\s*.*\\s*.*\\s*.*\\s*.*\\s*.*\\s*(.*\\d*\\d*,\\d*)";
 			Pattern p = Pattern.compile(template);
 			Matcher m = p.matcher(pageHtml);
 			
 			if (m.find()) {
-				System.out.println(m.group(1));
-				//System.out.println(Float.parseFloat(elecNumber)*multFactor);
-				return -1;
-				//return Float.parseFloat(elecNumber)*multFactor;
+				//remove all commas
+				return Integer.parseInt(m.group(1).replace("," , ""));
 			}			
 			return -1;
 			
