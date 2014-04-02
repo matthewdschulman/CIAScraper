@@ -64,7 +64,10 @@ public class GetCountries {
 		codeToCountry.remove("oo");
 		codeToCountry.remove("um");
 		codeToCountry.remove("wi");
-		codeToCountry.remove("ee");				
+		codeToCountry.remove("ee");			
+		codeToCountry.remove("xq");	
+		codeToCountry.remove("zh");	
+		codeToCountry.remove("io");	
 	}
 
 	private static void removeJunk(LinkedList<String> countryCodes) {
@@ -72,6 +75,9 @@ public class GetCountries {
 		countryCodes.remove("oo");
 		countryCodes.remove("um");
 		countryCodes.remove("wi");
-		countryCodes.remove("ee");		
+		countryCodes.remove("ee");
+		countryCodes.remove("xq");
+		countryCodes.remove("zh");
+		countryCodes.remove("io");
 	}
 }
