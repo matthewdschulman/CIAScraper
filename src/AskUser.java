@@ -12,8 +12,20 @@ public class AskUser {
 		System.out.println("What would you like to research? Please enter 'earthquakes' for earthquakes or...");
 		System.out.println("'ep' for  elevation points or...");
 		System.out.println("'hemispheres' for hemispheres or...");
-		System.out.println("'pp' for political parties.");
+		System.out.println("'pp' for political parties or...");
+		System.out.println("'ec' for electricity consumption per capita");
 		String researchTopic = user_input.nextLine();
+		
+		if (researchTopic.equals("ec")) {
+			System.out.println("Would you like to find the top five countries with the "
+					+ "highest electricity consumption per capita? Please enter 'y' or 'n'");
+			String userResponse = user_input.nextLine();
+			if (userResponse.equals("n")) {
+				System.out.println("Sorry--please email matthewdschulman@gmail.com to request"
+						+ "your query.");
+			}
+			ElectricityConsumption.getTopECCountries(countryCodes, countryCodeToCountry);
+		}
 		
 		String hemisphere = "";
 		String userRegion = "";
