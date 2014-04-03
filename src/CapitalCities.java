@@ -144,9 +144,7 @@ public class CapitalCities {
 				capital = capitalArr[1].substring(0,capitalArr[1].length()-6);
 				return capital;
 			}
-		} catch (Exception e) {
-			System.out.println("Exception here");
-		}
+		} catch (Exception e) {}
 		return "";		
 	}
 
@@ -171,26 +169,24 @@ public class CapitalCities {
 					//case 1: country lat > 170
 					if (countryToLatitude.get(countryCodeToCountry.get(country)) < -170) {
 						tempLatCountry = (float) (360.0 + countryToLatitude.get(countryCodeToCountry.get(country)));
-						updateCountryLat = true;
 					}
 					//case 2
-					else if (countryToLatitude.get(countryCodeToCountry.get(countryCode)) < -170) {
+					if (countryToLatitude.get(countryCodeToCountry.get(countryCode)) < -170) {
 						tempLatCountryCode = (float) (360.0 + countryToLatitude.get(countryCodeToCountry.get(countryCode)));
-						updateCountryCodeLat = true;
 					}	
 				}
+				System.out.println(Float.toString(countryToLongitude.get(countryCodeToCountry.get(country)))
+						+ Float.toString(countryToLongitude.get(countryCodeToCountry.get(countryCode))));
 				if (Math.abs(countryToLongitude.get(countryCodeToCountry.get(country))) > 170 
 						|| Math.abs(countryToLongitude.get(countryCodeToCountry.get(countryCode))) > 170) {
 					
 					//check for longitude global wraparound
 					if (countryToLongitude.get(countryCodeToCountry.get(country)) < -170) {
 						tempLongCountry = (float) (360.0 + countryToLongitude.get(countryCodeToCountry.get(country)));
-						updateCountryLong = true;
 					}
 					//case 2
-					else if (countryToLongitude.get(countryCodeToCountry.get(countryCode)) < -170) {
-						tempLongCountryCode = (float) (360.0 + countryToLongitude.get(countryCodeToCountry.get(country)));
-						updateCountryCodeLong = true;
+					if (countryToLongitude.get(countryCodeToCountry.get(countryCode)) < -170) {
+						tempLongCountryCode = (float) (360.0 + countryToLongitude.get(countryCodeToCountry.get(countryCode)));
 					}	
 				}
 				
@@ -201,7 +197,9 @@ public class CapitalCities {
 					float latDifference = Math.abs(tempLatCountry - tempLatCountryCode);			
 					float longDifference = Math.abs(tempLongCountry - tempLongCountryCode);
 					
+					
 					if (latDifference < 10.0 && longDifference < 10.0) {
+						System.out.println(tempLongCountry + " " + tempLongCountryCode + " " + longDifference);
 						//check that the current country isn't the same as the country of interest
 						if (!countryCode.equals(country)) {
 							closeCountries.add(countryCodeToCountry.get(countryCode));

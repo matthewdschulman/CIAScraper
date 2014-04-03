@@ -24,13 +24,14 @@ public class Hemispheres {
 						
 			String eastOrWest = getDirection(country, ",\\s\\d*\\s\\d*\\s(\\w)", countryUrlTemplate);
 			if (northSouth.equals("S") && eastOrWest.equals("E")) {
+				
 				System.out.println(countryCodeToCountry.get(country));
 			}
 		}	
 		Reset.reset(countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);		
 	}
 	
-	private static String getDirection(String country, String regex, String urlTemplate) {
+	static String getDirection(String country, String regex, String urlTemplate) {
 		String curCountryURL = urlTemplate + country + ".html";
 		try {
 			Document countryPage = Jsoup.connect(curCountryURL).get();

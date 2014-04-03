@@ -9,7 +9,8 @@ public class AskUser {
 		Scanner user_input = new Scanner(System.in);
 		
 		//determine user's interest
-		System.out.println("What would you like to research? Please enter 'earthquakes' for earthquakes or...");
+		System.out.println("What would you like to research? ");
+		System.out.println("Please enter 'earthquakes' for earthquakes or...");
 		System.out.println("'ep' for  elevation points or...");
 		System.out.println("'hemispheres' for hemispheres or...");
 		System.out.println("'pp' for political parties or...");
@@ -17,9 +18,14 @@ public class AskUser {
 		System.out.println("'religion' for countries with dominant religions or...");
 		System.out.println("'ll' for the countries landlocked by a single country or...");
 		System.out.println("'wildcard' for a random question! or...");
-		System.out.println("'ec1' for the first extra credit question about finding the lat/long coordinates");
-		System.out.println("            and longitude of each other and such that the number of capitals is maximized");
+		System.out.println("'ec1' for the first extra credit question about finding country closesly surronded by the most capitals");
+		System.out.println("'ec2' for the second wildcard extra credit question");
 		String researchTopic = user_input.nextLine();
+		
+		if (researchTopic.equals("ec2")) {
+			System.out.println("Question: What are the countries in the NW hemisphere with the highest elevation points? I want to climb the mountains in these countries!");
+			HighestPoints.getHighCountries(countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);
+		}
 		
 		if (researchTopic.equals("ec1")) {
 			CapitalCities.findDenseCapitals(countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);
