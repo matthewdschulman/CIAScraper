@@ -14,8 +14,13 @@ public class AskUser {
 		System.out.println("'hemispheres' for hemispheres or...");
 		System.out.println("'pp' for political parties or...");
 		System.out.println("'ec' for electricity consumption per capita or...");
-		System.out.println("'religion' for countries with dominant religions");
+		System.out.println("'religion' for countries with dominant religions or...");
+		System.out.println("'ll' for the countries landlocked by a single country.");
 		String researchTopic = user_input.nextLine();
+		
+		if (researchTopic.equals("ll")) {
+			Landlocked.findSingleLandlocked(countryCodes, countryCodeToCountry);
+		}
 		
 		if (researchTopic.equals("ec")) {
 			System.out.println("Would you like to find the top five countries with the "
