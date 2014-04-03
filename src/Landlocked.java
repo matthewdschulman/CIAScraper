@@ -11,15 +11,14 @@ import org.jsoup.nodes.Document;
 public class Landlocked {
 
 	public static void findSingleLandlocked(LinkedList<String> countryCodes,
-			HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode) {
+			HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode, String countryUrlTemplate) {
 		System.out.println("Please wait one moment...");
 		System.out.println("The landlocked countries surronded by only one country are...");
 		
 		try {
 			for (String country : countryCodes) {
 				
-				String curCountryURL = "https://www.cia.gov/library/publications/the-world-factbook/geos/countrytemplate_"
-						+ country + ".html";
+				String curCountryURL = countryUrlTemplate + country + ".html";
 				Document countryPage = Jsoup.connect(curCountryURL).get();
 				String pageHtml = countryPage.html();			
 			
@@ -35,7 +34,7 @@ public class Landlocked {
 				}
 			}
 			
-			Reset.reset(countryCodes, countryCodeToCountry, countryToCode);		
+			Reset.reset(countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

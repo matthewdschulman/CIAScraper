@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class AskUser {
 
-	public static void askUserForInput(LinkedList<String> countryCodes, HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode) {
+	public static void askUserForInput(LinkedList<String> countryCodes, HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode, String countryUrlTemplate) {
 		Scanner user_input = new Scanner(System.in);
 		
 		//determine user's interest
@@ -22,17 +22,17 @@ public class AskUser {
 		String researchTopic = user_input.nextLine();
 		
 		if (researchTopic.equals("ec1")) {
-			CapitalCities.findDenseCapitals(countryCodes, countryCodeToCountry, countryToCode);
+			CapitalCities.findDenseCapitals(countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);
 		}
 		
 		if (researchTopic.equals("wildcard")) {
 			System.out.println("The research question will be...");
 			System.out.println("'Which 10 nations have the most internet users per capita?'");
-			InternetPenetration.findInternetPenetration(countryCodes, countryCodeToCountry, countryToCode);
+			InternetPenetration.findInternetPenetration(countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);
 		}
 		
 		if (researchTopic.equals("ll")) {
-			Landlocked.findSingleLandlocked(countryCodes, countryCodeToCountry, countryToCode);
+			Landlocked.findSingleLandlocked(countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);
 		}
 		
 		if (researchTopic.equals("ec")) {
@@ -42,9 +42,9 @@ public class AskUser {
 			if (userResponse.equals("n")) {
 				System.out.println("Sorry--please email matthewdschulman@gmail.com to request"
 						+ "your query.");
-				Reset.reset(countryCodes, countryCodeToCountry, countryToCode);	
+				Reset.reset(countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);	
 			}
-			ElectricityConsumption.getTopECCountries(countryCodes, countryCodeToCountry, countryToCode);
+			ElectricityConsumption.getTopECCountries(countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);
 		}
 		
 		if (researchTopic.equals("religion")) {
@@ -56,9 +56,9 @@ public class AskUser {
 			if (userResponse.equals("n")) {
 				System.out.println("Sorry--please email matthewdschulman@gmail.com to request"
 						+ "your query.");
-				Reset.reset(countryCodes, countryCodeToCountry, countryToCode);	
+				Reset.reset(countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);	
 			}
-			Religion.getDominantReligionCountries(countryCodes, countryCodeToCountry, countryToCode);			
+			Religion.getDominantReligionCountries(countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);			
 		}
 		
 		String hemisphere = "";
@@ -100,9 +100,9 @@ public class AskUser {
 			if (userResponse.equals("n")) {
 				System.out.println("Sorry--please email matthewdschulman@gmail.com to request"
 						+ "your query.");
-				Reset.reset(countryCodes, countryCodeToCountry, countryToCode);
+				Reset.reset(countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);
 			}
-			Political.getPoliticalParties(userRegion, countryCodes, countryCodeToCountry, countryToCode);
+			Political.getPoliticalParties(userRegion, countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);
 		}
 		
 		//determine the scope of countries the user wants to consider
@@ -112,7 +112,7 @@ public class AskUser {
 		String numOfCountries = user_input.nextLine();
 		
 		if (researchTopic.equals("hemispheres")) {
-			Hemispheres.findCountries(hemisphere, numOfCountries, countryCodes, countryCodeToCountry, countryToCode);
+			Hemispheres.findCountries(hemisphere, numOfCountries, countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);
 		}
 		
 		//depict which extreme the user wants
@@ -142,11 +142,11 @@ public class AskUser {
 				
 		//STILL HAVE TO MAKE THIS CODE MORE AGILE!
 		if (researchTopic.equals("earthquakes")) {
-			Earthquakes.findEarthquakes(countryCodes, countryCodeToCountry, userRegion, countryToCode);
+			Earthquakes.findEarthquakes(countryCodes, countryCodeToCountry, userRegion, countryToCode, countryUrlTemplate);
 		}
 		
 		if (researchTopic.equals("ep")) {
-			ElevationPoint.findElevationPoint(userRegion, numOfCountries, highOrLow, countryCodes, countryCodeToCountry, countryToCode);
+			ElevationPoint.findElevationPoint(userRegion, numOfCountries, highOrLow, countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);
 		}
 			
 	}

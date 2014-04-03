@@ -38,14 +38,30 @@ public class GetCountries {
 			e.printStackTrace();
 		}
 		//remove non-countries from the list including EU, Western Sahara, etc.
-		removeJunk(countryCodes);
-		removeJunk(codeToCountry);
+		ArrayList<String> junk = new ArrayList<String>();
+		junk.add("xx");
+		junk.add("oo");
+		junk.add("um");
+		junk.add("wi");
+		junk.add("ee");
+		junk.add("xq");
+		junk.add("zh");
+		junk.add("io");
+		junk.add("xo");
+		junk.add("ip");
+		junk.add("ck");
+		junk.add("dx");
+		junk.add("hm");
+		junk.add("od");
+		junk.add("mk");		
+		removeJunk(countryCodes, junk);
+		removeJunk(codeToCountry, junk);
+		
+		//return the two dictionaries that go in both directions from code to country and vica versa
 		ArrayList<HashMap<String, String>> dictionaries = new ArrayList<HashMap<String, String>>();
 		dictionaries.add(codeToCountry);
 		dictionaries.add(countryToCode);
-		return dictionaries;
-		
-		
+		return dictionaries;		
 	}
 
 	private static String getFullName(String[] htmlArr, int i) {
@@ -64,43 +80,15 @@ public class GetCountries {
 		return fullName;
 	}
 
-	private static void removeJunk(HashMap<String, String> codeToCountry) {
-		codeToCountry.remove("xx");
-		codeToCountry.remove("oo");
-		codeToCountry.remove("um");
-		codeToCountry.remove("wi");
-		codeToCountry.remove("ee");			
-		codeToCountry.remove("xq");	
-		codeToCountry.remove("zh");	
-		codeToCountry.remove("io");	
-		codeToCountry.remove("xo");	
-		codeToCountry.remove("ip");	
-		codeToCountry.remove("ck");
-		codeToCountry.remove("dx");
-		codeToCountry.remove("hm");
-		codeToCountry.remove("pc");
-		codeToCountry.remove("um");
-		codeToCountry.remove("od");
-		codeToCountry.remove("mq");
+	private static void removeJunk(HashMap<String, String> codeToCountry, ArrayList<String> junk) {
+		for (String curJunk : junk) {
+			codeToCountry.remove(curJunk);
+		}
 	}
 
-	private static void removeJunk(LinkedList<String> countryCodes) {
-		countryCodes.remove("xx");
-		countryCodes.remove("oo");
-		countryCodes.remove("um");
-		countryCodes.remove("wi");
-		countryCodes.remove("ee");
-		countryCodes.remove("xq");
-		countryCodes.remove("zh");
-		countryCodes.remove("io");
-		countryCodes.remove("xo");
-		countryCodes.remove("ip");
-		countryCodes.remove("ck");
-		countryCodes.remove("dx");
-		countryCodes.remove("hm");
-		countryCodes.remove("pc");
-		countryCodes.remove("um");
-		countryCodes.remove("od");
-		countryCodes.remove("mq");
+	private static void removeJunk(LinkedList<String> countryCodes, ArrayList<String> junk) {
+		for (String curJunk : junk) {
+			countryCodes.remove(curJunk);
+		}
 	}
 }

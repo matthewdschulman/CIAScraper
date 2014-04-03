@@ -17,7 +17,7 @@ import org.jsoup.nodes.Document;
 public class CapitalCities {
 
 	public static void findDenseCapitals(LinkedList<String> countryCodes,
-			HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode) {
+			HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode, String countryUrlTemplate) {
 		//create an adjacency Matrix to mark which capitals are within 10 degs of
 		//latitude and longitude. mark '1' for within 10 degrees and '0' for 
 		//not within 10 degrees. Initialize to '-1' for not yet visited
@@ -34,7 +34,7 @@ public class CapitalCities {
 		//as positive, and S and W values count as negative values.
 		//get the values for each country. also, get rid of mintues and turn
 		//values into decimals.
-		ArrayList<HashMap<String, Float>> latsAndLongMatchings = getLatsAndLongs(countryCodes, countryCodeToCountry);
+		ArrayList<HashMap<String, Float>> latsAndLongMatchings = getLatsAndLongs(countryCodes, countryCodeToCountry, countryUrlTemplate);
 		HashMap<String, Float> countryToLats = latsAndLongMatchings.get(0);
 		HashMap<String, Float> countryToLongs = latsAndLongMatchings.get(1);
 		//create a hashmap that describes which countries are within range
@@ -74,27 +74,27 @@ public class CapitalCities {
 	        //iterate through all of the close countries
 	        
 	        for (String curCountry : ((ArrayList<String>) pairs.getValue())) {
-	        	String curCapital = getCapital(countryToCode.get(curCountry));
+	        	String curCapital = getCapital(countryToCode.get(curCountry), countryUrlTemplate);
 	        	System.out.println("Country: " + curCountry + " | capital: " + curCapital + 
-	        			" latitude: " + countryToLats.get(curCountry) + " | longitude: " + countryToLongs.get(curCountry));
+	        			" | latitude: " + countryToLats.get(curCountry) + " | longitude: " + countryToLongs.get(curCountry));
 	        }
 	        
 	        iterWinner.remove(); // avoids a ConcurrentModificationException
 	    }		
 		
-	    Reset.reset(countryCodes, countryCodeToCountry, countryToCode);	
+	    Reset.reset(countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);	
 	}
 
-	private static String getCapital(String country) {
-		String curCountryURL = "https://www.cia.gov/library/publications/the-world-factbook/geos/countrytemplate_"
-				+ country + ".html";
+	private static String getCapital(String country, String urlTemplate) {
+		String curCountryURL = urlTemplate + country + ".html";
+		System.out.println(curCountryURL);
 		
 		try {
 			Document countryPage = Jsoup.connect(curCountryURL).get();
 			String pageHtml = countryPage.html();
 		
 			//the southeastern hemisphere is defined by S latitudes and E longitudes
-			String template = "Capital:</a>\\s*.*\\s*.*\\s*.*\\s*.*\\s*.*(\\s*.*\\s*.*\\s*.*))";
+			String template = "Capital:\\w*\\s*.*\\s*.*\\s*.*\\s*.*\\s*.*\\s*.*\\s*.*(\\s*.*)\\s*.*\\s*.*";
 			Pattern p = Pattern.compile(template);
 			Matcher m = p.matcher(pageHtml);
 			if (m.find()) {
@@ -103,8 +103,7 @@ public class CapitalCities {
 		} catch (Exception e) {
 			System.out.println("Exception here");
 		}
-		return curCountryURL;
-		
+		return curCountryURL;		
 	}
 
 	private static ArrayList<String> getCloseCountries(HashMap<String, Float> countryToLatitude,
@@ -166,7 +165,7 @@ public class CapitalCities {
 		return closeCountries;
 	}	
 
-	private static ArrayList<HashMap<String, Float>> getLatsAndLongs(LinkedList<String> countryCodes, HashMap<String, String> countryCodeToCountry) {
+	private static ArrayList<HashMap<String, Float>> getLatsAndLongs(LinkedList<String> countryCodes, HashMap<String, String> countryCodeToCountry, String urlTemplate) {
 		//the first element of the list is a hashmap that contains the country-lat mappings.
 		//the second element of the list is a hashmap that contains the county-long mappings.
 		ArrayList<HashMap<String, Float>> latsAndLongs = new ArrayList<HashMap<String, Float>>();
@@ -177,8 +176,7 @@ public class CapitalCities {
 		
 		//get the latitudes and longitudes for each country
 		for (String country : countryCodes) {
-			String curCountryURL = "https://www.cia.gov/library/publications/the-world-factbook/geos/countrytemplate_"
-					+ country + ".html";
+			String curCountryURL = urlTemplate + country + ".html";
 			//Moldova has a weird format; cover the edge case
 			if (country.equals("md")) {
 				countryToLat.put(countryCodeToCountry.get(country), (float) 47.0);

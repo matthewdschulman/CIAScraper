@@ -11,7 +11,7 @@ import org.jsoup.nodes.Document;
 public class InternetPenetration {
 
 	public static void findInternetPenetration(LinkedList<String> countryCodes,
-			HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode) {
+			HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode, String countryUrlTemplate) {
 		System.out.println("Please wait one moment...");
 		
 		try {
@@ -21,13 +21,12 @@ public class InternetPenetration {
 			
 			for (String country : countryCodes) {
 				
-				String curCountryURL = "https://www.cia.gov/library/publications/the-world-factbook/geos/countrytemplate_"
-						+ country + ".html";
+				String curCountryURL = countryUrlTemplate + country + ".html";
 				Document countryPage = Jsoup.connect(curCountryURL).get();
 				String pageHtml = countryPage.html();			
 			
 				//get the current country's population
-				int population = Population.getPopulation(country);
+				int population = Population.getPopulation(country, countryUrlTemplate);
 				float internetUsers = getInternetUsers(pageHtml);
 				double internetPenetration = (double)internetUsers / (double)population;
 				//if the population was correctly received
@@ -53,7 +52,7 @@ public class InternetPenetration {
 				System.out.println((i+1) + ": " + topNations[i] + ": " + trackingNations.get(topNations[i])*100 + "% of citizens use the internet");
 			}
 			//reset
-			Reset.reset(countryCodes, countryCodeToCountry, countryToCode);		
+			Reset.reset(countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -7,10 +7,9 @@ import org.jsoup.nodes.Document;
 
 
 public class Population {
-	public static int getPopulation(String country) {
+	public static int getPopulation(String country, String countryUrlTemplate) {
 		// TODO Auto-generated method stub
-		String curCountryURL = "https://www.cia.gov/library/publications/the-world-factbook/geos/countrytemplate_"
-				+ country + ".html";
+		String curCountryURL = countryUrlTemplate + country + ".html";
 		//atypical format for a few countries: account for these edge cases below
 		if (country.equals("ax")) {
 			return 15700;

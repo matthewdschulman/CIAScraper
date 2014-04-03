@@ -12,7 +12,7 @@ import org.jsoup.nodes.Document;
 public class ElectricityConsumption {
 
 	public static void getTopECCountries(LinkedList<String> countryCodes,
-			HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode) {	
+			HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode, String countryUrlTemplate) {	
 		
 		
 		System.out.println("Please wait for a moment...");
@@ -23,12 +23,12 @@ public class ElectricityConsumption {
 		HashMap<String, Double> trackingTopNations = new HashMap<String, Double>();
 				
 		for (String country : countryCodes) {
-			float elecConsump = getElecConsump(country);
+			float elecConsump = getElecConsump(country, countryUrlTemplate);
 			double elecConsumpPerPop = 0.0;
 			
 			//if data was extracted for elecConsump
 			if (elecConsump > 0) {
-				int population = Population.getPopulation(country);
+				int population = Population.getPopulation(country, countryUrlTemplate);
 				elecConsumpPerPop = elecConsump / ((float) population);				
 				
 				//if the leaderboard is not full, enter the country no matter what
@@ -51,7 +51,7 @@ public class ElectricityConsumption {
 		}
 		
 		//reset
-		Reset.reset(countryCodes, countryCodeToCountry, countryToCode);	
+		Reset.reset(countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);	
 	}
 
 	private static void insertCountry(String country, HashMap<String, String> countryCodeToCountry, 
@@ -75,9 +75,8 @@ public class ElectricityConsumption {
 		}		
 	}
 
-	private static float getElecConsump(String country) {
-		String curCountryURL = "https://www.cia.gov/library/publications/the-world-factbook/geos/countrytemplate_"
-				+ country + ".html";
+	private static float getElecConsump(String country, String urlTemplate) {
+		String curCountryURL = urlTemplate + country + ".html";
 		try {
 			Document countryPage = Jsoup.connect(curCountryURL).get();
 			String pageHtml = countryPage.html();

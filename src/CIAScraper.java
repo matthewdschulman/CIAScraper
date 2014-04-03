@@ -19,6 +19,7 @@ public class CIAScraper {
 		//print out an extra line for stylistic purposes
 		System.out.println("");
 		String ciaUrl = "https://www.cia.gov/library/publications/the-world-factbook/appendix/appendix-d.html";
+		String countryUrlTemplate = "https://www.cia.gov/library/publications/the-world-factbook/geos/countrytemplate_";
 		
 		//create a list of all the country codes listed on the CIA website
 		//initialize it to nothing
@@ -30,6 +31,6 @@ public class CIAScraper {
 		HashMap<String, String> countryToCode = countryDictionaries.get(1);
 		
 		//ask the user what he wants to do
-		AskUser.askUserForInput(countryCodes, countryCodeToCountry, countryToCode);
+		AskUser.askUserForInput(countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);
 	}
 }

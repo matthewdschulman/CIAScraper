@@ -11,25 +11,24 @@ import org.jsoup.nodes.Document;
 public class Political {
 
 	public static void getPoliticalParties(String userRegion, LinkedList<String> countryCodes,
-			HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode) {
+			HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode, String countryUrlTemplate) {
 		if (!userRegion.equals("Asia")) {
 			System.out.println("Haven't implemented for this homework assignment");			
 		}
 		System.out.println("Please wait a moment...the countries in "+ userRegion + " with"
 				+ "more than 10 political parties are...");
 		for (String country : countryCodes) {
-			boolean moreThan10Parties = moreThan10Parties(country);
-			boolean inAsia = checkInAsia(country);
+			boolean moreThan10Parties = moreThan10Parties(country, countryUrlTemplate);
+			boolean inAsia = checkInAsia(country, countryUrlTemplate);
 			if (moreThan10Parties && inAsia) {
 				System.out.println(countryCodeToCountry.get(country));
 			}			
 		}
-		Reset.reset(countryCodes, countryCodeToCountry, countryToCode);		
+		Reset.reset(countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);		
 	}
 
-	private static boolean checkInAsia(String country) {
-		String curCountryURL = "https://www.cia.gov/library/publications/the-world-factbook/geos/countrytemplate_"
-				+ country + ".html";
+	private static boolean checkInAsia(String country, String urlTemplate) {
+		String curCountryURL = urlTemplate + country + ".html";
 		try {
 			Document countryPage = Jsoup.connect(curCountryURL).get();
 			String pageHtml = countryPage.html();
@@ -56,9 +55,8 @@ public class Political {
 	}
 	
 
-	private static boolean moreThan10Parties(String country) {
-		String curCountryURL = "https://www.cia.gov/library/publications/the-world-factbook/geos/countrytemplate_"
-				+ country + ".html";
+	private static boolean moreThan10Parties(String country, String urlTemplate) {
+		String curCountryURL = urlTemplate + country + ".html";
 		try {
 			Document countryPage = Jsoup.connect(curCountryURL).get();
 			String pageHtml = countryPage.html();
