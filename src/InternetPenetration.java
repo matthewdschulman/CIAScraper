@@ -11,7 +11,7 @@ import org.jsoup.nodes.Document;
 public class InternetPenetration {
 
 	public static void findInternetPenetration(LinkedList<String> countryCodes,
-			HashMap<String, String> countryCodeToCountry) {
+			HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode) {
 		System.out.println("Please wait one moment...");
 		
 		try {
@@ -53,7 +53,7 @@ public class InternetPenetration {
 				System.out.println((i+1) + ": " + topNations[i] + ": " + trackingNations.get(topNations[i])*100 + "% of citizens use the internet");
 			}
 			//reset
-			Reset.reset(countryCodes, countryCodeToCountry);	
+			Reset.reset(countryCodes, countryCodeToCountry, countryToCode);		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

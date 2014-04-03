@@ -10,10 +10,10 @@ import org.jsoup.nodes.Document;
 
 public class Earthquakes {
 
-	public static void findEarthquakes(LinkedList<String> countryCodes, HashMap<String, String> countryCodeToCountry, String userRegion) {
+	public static void findEarthquakes(LinkedList<String> countryCodes, HashMap<String, String> countryCodeToCountry, String userRegion, HashMap<String, String> countryToCode) {
 		if (!userRegion.equals("region_soa")) {
 			System.out.println("Haven't implemented regions other than south america for this homework");
-			Reset.reset(countryCodes, countryCodeToCountry);
+			Reset.reset(countryCodes, countryCodeToCountry, countryToCode);
 		}
 		System.out.println("According to the CIA, the following countries in South America frequently have earthquakes:");
 		for (String country : countryCodes) {
@@ -30,6 +30,6 @@ public class Earthquakes {
 				e.printStackTrace();
 			}
 		}
-		Reset.reset(countryCodes, countryCodeToCountry);		
+		Reset.reset(countryCodes, countryCodeToCountry, countryToCode);			
 	}	
 }

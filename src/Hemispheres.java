@@ -11,7 +11,7 @@ import org.jsoup.nodes.Document;
 public class Hemispheres {
 	//note: countries with capitals are classified by the coordinates of their capital city.
 	public static void findCountries(String hemisphere, String numOfCountries, 
-			LinkedList<String> countryCodes, HashMap<String, String> countryCodeToCountry) {
+			LinkedList<String> countryCodes, HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode) {
 		if (!hemisphere.equals("SE")) {
 			System.out.println("Haven't implemented for this homework assignment");			
 		}
@@ -27,7 +27,7 @@ public class Hemispheres {
 				System.out.println(countryCodeToCountry.get(country));
 			}
 		}	
-		Reset.reset(countryCodes, countryCodeToCountry);	
+		Reset.reset(countryCodes, countryCodeToCountry, countryToCode);		
 	}
 	
 	private static String getDirection(String country, String regex) {

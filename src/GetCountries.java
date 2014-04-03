@@ -13,8 +13,9 @@ import org.jsoup.nodes.Document;
 public class GetCountries {
 	//exclude non countries including western sahara, EU, etc. 
 	//create hash map that links country code to country name
-	public static HashMap<String, String> getCountries(String url, LinkedList<String> countryCodes, String ciaUrl) {
+	public static ArrayList<HashMap<String, String>> getCountries(String url, LinkedList<String> countryCodes, String ciaUrl) {
 		HashMap<String, String> codeToCountry = new HashMap<String, String>();
+		HashMap<String, String> countryToCode = new HashMap<String, String>();
 		try {
 			Document doc = Jsoup.connect(url).get();
 			String html = doc.html();
@@ -26,6 +27,7 @@ public class GetCountries {
 					//find the full country name
 					String fullName = getFullName(htmlArr, i+1);
 					codeToCountry.put(twoLetterCode, fullName);
+					countryToCode.put(fullName, twoLetterCode);
 				}
 				if (htmlArr[i].contains("</select>")) {
 					break;
@@ -38,7 +40,10 @@ public class GetCountries {
 		//remove non-countries from the list including EU, Western Sahara, etc.
 		removeJunk(countryCodes);
 		removeJunk(codeToCountry);
-		return codeToCountry;
+		ArrayList<HashMap<String, String>> dictionaries = new ArrayList<HashMap<String, String>>();
+		dictionaries.add(codeToCountry);
+		dictionaries.add(countryToCode);
+		return dictionaries;
 		
 		
 	}

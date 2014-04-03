@@ -7,6 +7,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -23,10 +24,12 @@ public class CIAScraper {
 		//initialize it to nothing
 		LinkedList<String> countryCodes = new LinkedList<String>();
 		
-		//create a hashmap that links each country code to its country. also update the linked list of country codes
-		HashMap<String, String> countryCodeToCountry = GetCountries.getCountries(ciaUrl, countryCodes, ciaUrl);
+		//create hashmaps that link each country code to its country in both directions. also update the linked list of country codes
+		ArrayList<HashMap<String, String>> countryDictionaries = GetCountries.getCountries(ciaUrl, countryCodes, ciaUrl);
+		HashMap<String, String> countryCodeToCountry = countryDictionaries.get(0);
+		HashMap<String, String> countryToCode = countryDictionaries.get(1);
 		
 		//ask the user what he wants to do
-		AskUser.askUserForInput(countryCodes, countryCodeToCountry);
+		AskUser.askUserForInput(countryCodes, countryCodeToCountry, countryToCode);
 	}
 }

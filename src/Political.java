@@ -11,7 +11,7 @@ import org.jsoup.nodes.Document;
 public class Political {
 
 	public static void getPoliticalParties(String userRegion, LinkedList<String> countryCodes,
-			HashMap<String, String> countryCodeToCountry) {
+			HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode) {
 		if (!userRegion.equals("Asia")) {
 			System.out.println("Haven't implemented for this homework assignment");			
 		}
@@ -24,7 +24,7 @@ public class Political {
 				System.out.println(countryCodeToCountry.get(country));
 			}			
 		}
-		Reset.reset(countryCodes, countryCodeToCountry);		
+		Reset.reset(countryCodes, countryCodeToCountry, countryToCode);		
 	}
 
 	private static boolean checkInAsia(String country) {

@@ -12,7 +12,7 @@ import org.jsoup.nodes.Document;
 public class ElevationPoint {
 	//note: countries that do not list elevation point on their pages will be ignored for query
 	public static void findElevationPoint(String userRegion, String numOfCountries, String highOrLow, 
-			LinkedList<String> countryCodes, HashMap<String, String> countryCodeToCountry) {
+			LinkedList<String> countryCodes, HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode) {
 		//in the case that we're not going for the country with the lowest elevation point
 		if (highOrLow.equals("highest") || highOrLow.equals("")) {
 			System.out.println("I have not yet implemented this loop for the homework");
@@ -47,7 +47,7 @@ public class ElevationPoint {
 		}
 		System.out.println(lowestCountry + " both have an elevation low point of " + 
 				lowestElevationPoint + " meters.");
-		Reset.reset(countryCodes, countryCodeToCountry);	
+		Reset.reset(countryCodes, countryCodeToCountry, countryToCode);		
 	}
 
 	private static float getCurEP(String pageHtml, String highOrLow) {

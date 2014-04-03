@@ -12,7 +12,7 @@ import org.jsoup.nodes.Document;
 public class ElectricityConsumption {
 
 	public static void getTopECCountries(LinkedList<String> countryCodes,
-			HashMap<String, String> countryCodeToCountry) {	
+			HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode) {	
 		
 		
 		System.out.println("Please wait for a moment...");
@@ -51,7 +51,7 @@ public class ElectricityConsumption {
 		}
 		
 		//reset
-		Reset.reset(countryCodes, countryCodeToCountry);
+		Reset.reset(countryCodes, countryCodeToCountry, countryToCode);	
 	}
 
 	private static void insertCountry(String country, HashMap<String, String> countryCodeToCountry, 

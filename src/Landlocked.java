@@ -11,7 +11,7 @@ import org.jsoup.nodes.Document;
 public class Landlocked {
 
 	public static void findSingleLandlocked(LinkedList<String> countryCodes,
-			HashMap<String, String> countryCodeToCountry) {
+			HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode) {
 		System.out.println("Please wait one moment...");
 		System.out.println("The landlocked countries surronded by only one country are...");
 		
@@ -35,7 +35,7 @@ public class Landlocked {
 				}
 			}
 			
-			Reset.reset(countryCodes, countryCodeToCountry);	
+			Reset.reset(countryCodes, countryCodeToCountry, countryToCode);		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

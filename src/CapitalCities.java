@@ -17,10 +17,12 @@ import org.jsoup.nodes.Document;
 public class CapitalCities {
 
 	public static void findDenseCapitals(LinkedList<String> countryCodes,
-			HashMap<String, String> countryCodeToCountry) {
+			HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode) {
 		//create an adjacency Matrix to mark which capitals are within 10 degs of
 		//latitude and longitude. mark '1' for within 10 degrees and '0' for 
 		//not within 10 degrees. Initialize to '-1' for not yet visited
+		System.out.println("Please wait for a minute...");
+		System.out.println("The country/capital surronded by the most capitals within 10 degs of longitude and latitude is...");
 		int[][] adjacencyMatrix = new int[countryCodes.size()+1][countryCodes.size()+1];
 		for (int i = 0; i < adjacencyMatrix.length; i++) {
 			for (int j = 0; j < adjacencyMatrix[0].length; j++) {
@@ -64,12 +66,45 @@ public class CapitalCities {
 	    java.util.Iterator<Entry<String, ArrayList>> iterWinner = countryWithMostCapitals.entrySet().iterator();
 	    while (iterWinner.hasNext()) {
 	        Map.Entry pairs = (Map.Entry)iterWinner.next();
-	        System.out.println(pairs.getKey() + " = " + pairs.getValue());
+	        System.out.println(pairs.getKey());
+	        System.out.print("The latitude of " + pairs.getKey() + " is " + countryToLats.get(pairs.getKey()));
+	        System.out.println(" and the longitude is " + countryToLongs.get(pairs.getKey()));
+	        System.out.print("There are " + largestNumberOfCloseCapitals + " countries/capitals within ");
+	        System.out.println("10 degrees of latitude and longitude. Here is the list:");
+	        //iterate through all of the close countries
+	        
+	        for (String curCountry : ((ArrayList<String>) pairs.getValue())) {
+	        	String curCapital = getCapital(countryToCode.get(curCountry));
+	        	System.out.println("Country: " + curCountry + " | capital: " + curCapital + 
+	        			" latitude: " + countryToLats.get(curCountry) + " | longitude: " + countryToLongs.get(curCountry));
+	        }
+	        
 	        iterWinner.remove(); // avoids a ConcurrentModificationException
-	    }
+	    }		
 		
+	    Reset.reset(countryCodes, countryCodeToCountry, countryToCode);	
+	}
+
+	private static String getCapital(String country) {
+		String curCountryURL = "https://www.cia.gov/library/publications/the-world-factbook/geos/countrytemplate_"
+				+ country + ".html";
 		
-		Reset.reset(countryCodes, countryCodeToCountry);	
+		try {
+			Document countryPage = Jsoup.connect(curCountryURL).get();
+			String pageHtml = countryPage.html();
+		
+			//the southeastern hemisphere is defined by S latitudes and E longitudes
+			String template = "Capital:</a>\\s*.*\\s*.*\\s*.*\\s*.*\\s*.*(\\s*.*\\s*.*\\s*.*))";
+			Pattern p = Pattern.compile(template);
+			Matcher m = p.matcher(pageHtml);
+			if (m.find()) {
+				System.out.println(m.group(1));
+			}
+		} catch (Exception e) {
+			System.out.println("Exception here");
+		}
+		return curCountryURL;
+		
 	}
 
 	private static ArrayList<String> getCloseCountries(HashMap<String, Float> countryToLatitude,
@@ -78,21 +113,58 @@ public class CapitalCities {
 		//iterate through the countries, find those "close" to the capital
 		for (String countryCode : countryCodes) {
 			try {
-				float latDifference = Math.abs(countryToLatitude.get(countryCodeToCountry.get(country)) - countryToLatitude.get(countryCodeToCountry.get(countryCode)));			
-				float longDifference = Math.abs(countryToLongitude.get(countryCodeToCountry.get(country)) - countryToLongitude.get(countryCodeToCountry.get(countryCode)));
-				if (latDifference < 10.0 && longDifference < 10.0) {
-					//check that the current country isn't the same as the country of interest
-					if (!countryCode.equals(country)) {
-						closeCountries.add(countryCodeToCountry.get(countryCode));
+				//check for global wraparound
+				boolean updateCountryLat = false;
+				boolean updateCountryCodeLat = false;
+				boolean updateCountryLong = false;
+				boolean updateCountryCodeLong = false;
+				float tempLatCountry = countryToLatitude.get(countryCodeToCountry.get(country));
+				float tempLatCountryCode = countryToLatitude.get(countryCodeToCountry.get(countryCode));
+				float tempLongCountry = countryToLongitude.get(countryCodeToCountry.get(country));
+				float tempLongCountryCode = countryToLongitude.get(countryCodeToCountry.get(country));
+				if (Math.abs(countryToLatitude.get(countryCodeToCountry.get(country))) > 170 
+						|| Math.abs(countryToLatitude.get(countryCodeToCountry.get(countryCode))) > 170) {
+					//check for latitude global wraparound
+					//case 1: country lat > 170
+					if (countryToLatitude.get(countryCodeToCountry.get(country)) < -170) {
+						tempLatCountry = (float) (360.0 + countryToLatitude.get(countryCodeToCountry.get(country)));
+						updateCountryLat = true;
 					}
-			    }
+					//case 2
+					else if (countryToLatitude.get(countryCodeToCountry.get(countryCode)) < -170) {
+						tempLatCountryCode = (float) (360.0 + countryToLatitude.get(countryCodeToCountry.get(countryCode)));
+						updateCountryCodeLat = true;
+					}	
+					
+					//check for longitude global wraparound
+					if (countryToLongitude.get(countryCodeToCountry.get(country)) < -170) {
+						tempLongCountry = (float) (360.0 + countryToLongitude.get(countryCodeToCountry.get(country)));
+						updateCountryLong = true;
+					}
+					//case 2
+					else if (countryToLongitude.get(countryCodeToCountry.get(countryCode)) < -170) {
+						tempLongCountryCode = (float) (360.0 + countryToLongitude.get(countryCodeToCountry.get(country)));
+						updateCountryCodeLong = true;
+					}	
+				}
+				//normal case without global wraparound
+				else {
+					
+					
+					float latDifference = Math.abs(tempLatCountry - tempLatCountryCode);			
+					float longDifference = Math.abs(tempLongCountry - tempLongCountryCode);
+					if (latDifference < 10.0 && longDifference < 10.0) {
+						//check that the current country isn't the same as the country of interest
+						if (!countryCode.equals(country)) {
+							closeCountries.add(countryCodeToCountry.get(countryCode));
+						}
+				    }
+				}
 			} catch (NullPointerException e) {}
 			
 		}
 		return closeCountries;
-	}
-
-	
+	}	
 
 	private static ArrayList<HashMap<String, Float>> getLatsAndLongs(LinkedList<String> countryCodes, HashMap<String, String> countryCodeToCountry) {
 		//the first element of the list is a hashmap that contains the country-lat mappings.

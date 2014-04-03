@@ -13,7 +13,7 @@ import org.jsoup.nodes.Document;
 public class Religion {
 
 	public static void getDominantReligionCountries(LinkedList<String> countryCodes,
-			HashMap<String, String> countryCodeToCountry) {
+			HashMap<String, String> countryCodeToCountry, HashMap<String, String> countryToCode) {
 		System.out.println("Please wait one moment...");
 				
 		//create hashmaps for countries with dominant religions in the two sets
@@ -45,7 +45,7 @@ public class Religion {
 		System.out.println("The countries with dominant religions that account "
 				+ "for less than 50% of the population are...");
 		printCountries(lessThan50, countryToReligion);
-		Reset.reset(countryCodes, countryCodeToCountry);	
+		Reset.reset(countryCodes, countryCodeToCountry, countryToCode);	
 	}
 
 	private static LinkedHashMap<String, Float> getPercentage(String country) {
