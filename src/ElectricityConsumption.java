@@ -13,6 +13,8 @@ public class ElectricityConsumption {
 
 	public static void getTopECCountries(LinkedList<String> countryCodes,
 			HashMap<String, String> countryCodeToCountry) {	
+		
+		
 		System.out.println("Please wait for a moment...");
 		
 		String[] topNations = new String[5];

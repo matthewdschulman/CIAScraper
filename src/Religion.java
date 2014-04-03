@@ -13,7 +13,7 @@ public class Religion {
 	public static void getDominantReligionCountries(LinkedList<String> countryCodes,
 			HashMap<String, String> countryCodeToCountry) {
 		System.out.println("Please wait one moment...");
-		
+				
 		//create hashmaps for countries with dominant religions in the two sets
 		HashMap<String, Double> greaterThan80 = new HashMap<String, Double>();
 		HashMap<String, Double> lessThan50 = new HashMap<String, Double>();
@@ -53,15 +53,22 @@ public class Religion {
 			pageHtml = pageHtml.replace("(", "");
 			pageHtml = pageHtml.replace(")", "");
 		
-			String template = "Religions:</a>\\s*.*\\s*.*\\s*.*\\s*.*\\s*.*\\s*.*data\">((\\w*|\\s*)*\\s\\d*)%";
-			Pattern p = Pattern.compile(template);			
-			Matcher m = p.matcher(pageHtml);
-			
-			if (m.find()) {
-				System.out.println(m.group(1));
-				return 0;// Double.parseDouble(m.group(1));
-			}
-			else {
+			try {
+				String template = "Religions:</a>\\s*.*\\s*.*\\s*.*\\s*.*\\s*.*\\s*.*data\">\\s*((\\w*\\s*)*\\d*.?\\d*)%";
+				
+				Pattern p = Pattern.compile(template);			
+				Matcher m = p.matcher(pageHtml);
+				
+				
+				if (!m.find()) {
+					System.out.println("no religion found");
+					return -1.0;
+			    }
+				else {
+					System.out.println(m.group(1));
+					return 0; // Double.parseDouble(m.group(1));
+				}
+			} catch (Exception e) {
 				System.out.println("no religion found");
 				return -1.0;
 			}
