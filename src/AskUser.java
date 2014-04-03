@@ -15,8 +15,15 @@ public class AskUser {
 		System.out.println("'pp' for political parties or...");
 		System.out.println("'ec' for electricity consumption per capita or...");
 		System.out.println("'religion' for countries with dominant religions or...");
-		System.out.println("'ll' for the countries landlocked by a single country.");
+		System.out.println("'ll' for the countries landlocked by a single country or...");
+		System.out.println("'wildcard' for a random question!");
 		String researchTopic = user_input.nextLine();
+		
+		if (researchTopic.equals("wildcard")) {
+			System.out.println("The research question will be...");
+			System.out.println("'Which nations have the most internet users per capita?'");
+			InternetPenetration.findInternetPenetration(countryCodes, countryCodeToCountry);
+		}
 		
 		if (researchTopic.equals("ll")) {
 			Landlocked.findSingleLandlocked(countryCodes, countryCodeToCountry);

@@ -15,32 +15,31 @@ public class Landlocked {
 		System.out.println("Please wait one moment...");
 		System.out.println("The landlocked countries surronded by only country are...");
 		
-			try {
-				for (String country : countryCodes) {
-					
-					String curCountryURL = "https://www.cia.gov/library/publications/the-world-factbook/geos/countrytemplate_"
-							+ country + ".html";
-					Document countryPage = Jsoup.connect(curCountryURL).get();
-					String pageHtml = countryPage.html();			
+		try {
+			for (String country : countryCodes) {
 				
-						//check if the current country is landlocked
-						boolean isLandlocked = checkIfLandlocked(pageHtml);
-						if (isLandlocked) {
-							//check if the country only has one border country
-							boolean onlyOneBorderCountry = checkNeighbors(pageHtml);
-							//if is landlocked and only has one border country, print country
-							if (onlyOneBorderCountry) {
-								System.out.println(countryCodeToCountry.get(country));
-							}
-						}
+				String curCountryURL = "https://www.cia.gov/library/publications/the-world-factbook/geos/countrytemplate_"
+						+ country + ".html";
+				Document countryPage = Jsoup.connect(curCountryURL).get();
+				String pageHtml = countryPage.html();			
+			
+				//check if the current country is landlocked
+				boolean isLandlocked = checkIfLandlocked(pageHtml);
+				if (isLandlocked) {
+					//check if the country only has one border country
+					boolean onlyOneBorderCountry = checkNeighbors(pageHtml);
+					//if is landlocked and only has one border country, print country
+					if (onlyOneBorderCountry) {
+						System.out.println(countryCodeToCountry.get(country));
+					}
 				}
-				
-				Reset.reset(countryCodes, countryCodeToCountry);	
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
-		
+			
+			Reset.reset(countryCodes, countryCodeToCountry);	
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 	}
 
 	private static boolean checkNeighbors(String pageHtml) {

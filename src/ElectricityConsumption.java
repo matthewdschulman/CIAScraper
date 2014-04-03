@@ -28,7 +28,7 @@ public class ElectricityConsumption {
 			
 			//if data was extracted for elecConsump
 			if (elecConsump > 0) {
-				int population = getPopulation(country);
+				int population = Population.getPopulation(country);
 				elecConsumpPerPop = elecConsump / ((float) population);				
 				
 				//if the leaderboard is not full, enter the country no matter what
@@ -88,7 +88,7 @@ public class ElectricityConsumption {
 			Pattern p = Pattern.compile(template);
 			Matcher m = p.matcher(pageHtml);
 			
-			float multFactor = (float) 0.0;
+			float multFactor = (float) 1.0;
 			String multFactorTemp = "";
 			if (m.find()) {
 				String elecNumber = m.group(1);
@@ -128,38 +128,4 @@ public class ElectricityConsumption {
 		System.out.println("Should not be here");
 		return (float) 0.00;
 	}
-
-	private static int getPopulation(String country) {
-		// TODO Auto-generated method stub
-		String curCountryURL = "https://www.cia.gov/library/publications/the-world-factbook/geos/countrytemplate_"
-				+ country + ".html";
-		//atypical format for country ax: account for this edge case below
-		if (country.equals("ax")) {
-			return 15700;
-		}
-		try {
-			Document countryPage = Jsoup.connect(curCountryURL).get();
-			String pageHtml = countryPage.html();
-		
-			String template = "Population:</a>\\s*.*\\s*.*\\s*.*\\s*.*\\s*.*\\s*(.*\\d*\\d*,\\d*)";
-			Pattern p = Pattern.compile(template);
-			Matcher m = p.matcher(pageHtml);
-			
-			if (m.find()) {
-				//remove all commas
-				return Integer.parseInt(m.group(1).replace("," , ""));
-			}			
-			return -1;
-			
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("Should not be here");
-		return -1;
-	}
-
 }
-//Population:</a>\s*.*\s*.*\s*.*\s*.*\s*.*\s*<div\sclass="category_data">\d*,\d*\s
-//Electricity - consumption:</a>\s*.*\s*.*\s*.*\s*.*\s*.*\s*<div class="category_data">(\d*.?\d*)\s
