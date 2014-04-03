@@ -59,7 +59,6 @@ public class ElevationPoint {
 			return Float.parseFloat(elevation);
 		}
 		else {
-			System.out.println("getCurEP failed");
 			//ensure that this country is not considered
 			if (highOrLow.equals("highest")) {
 				return -1;

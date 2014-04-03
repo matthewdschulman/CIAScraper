@@ -21,7 +21,7 @@ public class AskUser {
 		
 		if (researchTopic.equals("wildcard")) {
 			System.out.println("The research question will be...");
-			System.out.println("'Which nations have the most internet users per capita?'");
+			System.out.println("'Which 10 nations have the most internet users per capita?'");
 			InternetPenetration.findInternetPenetration(countryCodes, countryCodeToCountry);
 		}
 		

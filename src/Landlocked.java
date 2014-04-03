@@ -13,7 +13,7 @@ public class Landlocked {
 	public static void findSingleLandlocked(LinkedList<String> countryCodes,
 			HashMap<String, String> countryCodeToCountry) {
 		System.out.println("Please wait one moment...");
-		System.out.println("The landlocked countries surronded by only country are...");
+		System.out.println("The landlocked countries surronded by only one country are...");
 		
 		try {
 			for (String country : countryCodes) {
