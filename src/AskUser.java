@@ -16,8 +16,14 @@ public class AskUser {
 		System.out.println("'ec' for electricity consumption per capita or...");
 		System.out.println("'religion' for countries with dominant religions or...");
 		System.out.println("'ll' for the countries landlocked by a single country or...");
-		System.out.println("'wildcard' for a random question!");
+		System.out.println("'wildcard' for a random question! or...");
+		System.out.println("'ec1' for the first extra credit question about finding the lat/long coordinates");
+		System.out.println("            and longitude of each other and such that the number of capitals is maximized");
 		String researchTopic = user_input.nextLine();
+		
+		if (researchTopic.equals("ec1")) {
+			CapitalCities.findDenseCapitals(countryCodes, countryCodeToCountry);
+		}
 		
 		if (researchTopic.equals("wildcard")) {
 			System.out.println("The research question will be...");
