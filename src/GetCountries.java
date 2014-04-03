@@ -75,6 +75,7 @@ public class GetCountries {
 		codeToCountry.remove("hm");
 		codeToCountry.remove("pc");
 		codeToCountry.remove("um");
+		codeToCountry.remove("od");
 		codeToCountry.remove("mq");
 	}
 
@@ -94,6 +95,7 @@ public class GetCountries {
 		countryCodes.remove("hm");
 		countryCodes.remove("pc");
 		countryCodes.remove("um");
+		countryCodes.remove("od");
 		countryCodes.remove("mq");
 	}
 }

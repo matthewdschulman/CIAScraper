@@ -2,9 +2,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.swing.text.html.HTMLDocument.Iterator;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -31,27 +35,64 @@ public class CapitalCities {
 		ArrayList<HashMap<String, Float>> latsAndLongMatchings = getLatsAndLongs(countryCodes, countryCodeToCountry);
 		HashMap<String, Float> countryToLats = latsAndLongMatchings.get(0);
 		HashMap<String, Float> countryToLongs = latsAndLongMatchings.get(1);
-		
 		//create a hashmap that describes which countries are within range
 		HashMap<String, ArrayList> countriesInRange = new HashMap<String, ArrayList>();
-		
 		for (String country : countryCodes) {
-			ArrayList<String> curCloseCountries = getCloseCountries(countryToLats, countryToLongs, country);
+			ArrayList<String> curCloseCountries = getCloseCountries(countryToLats, countryToLongs, country, countryCodes, countryCodeToCountry);
 			countriesInRange.put(countryCodeToCountry.get(country), curCloseCountries);
 		}
 		
-		//then find country with most...
+		HashMap<String, ArrayList> countryWithMostCapitals = new HashMap<String, ArrayList>();
+		int largestNumberOfCloseCapitals = 0;
+		//iterate through the hashmap of country -> closeCountriesToThatCountry to find the 
+		//country with the most close countries (based of the capital cities)
+		java.util.Iterator<Entry<String, ArrayList>> iter = countriesInRange.entrySet().iterator();
+	    while (iter.hasNext()) {
+	        Map.Entry pairs = (Map.Entry)iter.next();
+	        ArrayList<String> curCloseCountries = (ArrayList<String>) pairs.getValue();
+	        int curSizeOfCloseCountries = curCloseCountries.size();
+	        //if the cur country has more close capitals, then make it the leader on the leaderboard
+	        if (curSizeOfCloseCountries > largestNumberOfCloseCapitals) {
+	        	largestNumberOfCloseCapitals = curSizeOfCloseCountries;
+	        	countryWithMostCapitals.clear();
+	        	countryWithMostCapitals.put((String) pairs.getKey(), (ArrayList<String>) pairs.getValue());
+	        }
+	        iter.remove(); // avoids a ConcurrentModificationException
+	    }
+	    
+	    //print out the one country with the most close capitals
+	    java.util.Iterator<Entry<String, ArrayList>> iterWinner = countryWithMostCapitals.entrySet().iterator();
+	    while (iterWinner.hasNext()) {
+	        Map.Entry pairs = (Map.Entry)iterWinner.next();
+	        System.out.println(pairs.getKey() + " = " + pairs.getValue());
+	        iterWinner.remove(); // avoids a ConcurrentModificationException
+	    }
 		
 		
 		Reset.reset(countryCodes, countryCodeToCountry);	
 	}
 
-	private static ArrayList<String> getCloseCountries(
-			HashMap<String, Float> countryToLatitude,
-			HashMap<String, Float> countryToLongitude, String country) {
-		// TODO Auto-generated method stub
-		return null;
+	private static ArrayList<String> getCloseCountries(HashMap<String, Float> countryToLatitude,
+			HashMap<String, Float> countryToLongitude, String country, LinkedList<String> countryCodes, HashMap<String, String> countryCodeToCountry) {
+		ArrayList<String> closeCountries = new ArrayList<String>();
+		//iterate through the countries, find those "close" to the capital
+		for (String countryCode : countryCodes) {
+			try {
+				float latDifference = Math.abs(countryToLatitude.get(countryCodeToCountry.get(country)) - countryToLatitude.get(countryCodeToCountry.get(countryCode)));			
+				float longDifference = Math.abs(countryToLongitude.get(countryCodeToCountry.get(country)) - countryToLongitude.get(countryCodeToCountry.get(countryCode)));
+				if (latDifference < 10.0 && longDifference < 10.0) {
+					//check that the current country isn't the same as the country of interest
+					if (!countryCode.equals(country)) {
+						closeCountries.add(countryCodeToCountry.get(countryCode));
+					}
+			    }
+			} catch (NullPointerException e) {}
+			
+		}
+		return closeCountries;
 	}
+
+	
 
 	private static ArrayList<HashMap<String, Float>> getLatsAndLongs(LinkedList<String> countryCodes, HashMap<String, String> countryCodeToCountry) {
 		//the first element of the list is a hashmap that contains the country-lat mappings.
@@ -66,6 +107,21 @@ public class CapitalCities {
 		for (String country : countryCodes) {
 			String curCountryURL = "https://www.cia.gov/library/publications/the-world-factbook/geos/countrytemplate_"
 					+ country + ".html";
+			//Moldova has a weird format; cover the edge case
+			if (country.equals("md")) {
+				countryToLat.put(countryCodeToCountry.get(country), (float) 47.0);
+				countryToLong.put(countryCodeToCountry.get(country), (float) (28.0 + (51.0/60.0)));
+			}
+			//Ukraine has a weird format; cover the edge case
+			if (country.equals("md")) {
+				countryToLat.put(countryCodeToCountry.get(country), (float) (50.0 + (26.0/60.0)));
+				countryToLong.put(countryCodeToCountry.get(country), (float) (30.0 + (31.0/60.0)));
+			}
+			//Nauru doesn't list the coordinates for its capital...
+			if (country.equals("nr")) {
+				countryToLat.put(countryCodeToCountry.get(country), (float) (-1*(32.0/60.0)));
+				countryToLong.put(countryCodeToCountry.get(country), (float) (166.0 + (55.0/60.0)));
+			}
 			try {
 				Document countryPage = Jsoup.connect(curCountryURL).get();
 				String pageHtml = countryPage.html();
@@ -74,8 +130,9 @@ public class CapitalCities {
 				String template = "Capital:</a>\\s*.*\\s*.*\\s*.*\\s*.*\\s*.*\\s*.*\\s*.*"
 						+ "\\s*.*\\s*.*\\s*.*\\s*.*\\s*.*>(\\d*\\s*\\d*\\s*\\w*,\\s*\\d*\\s*\\d*\\s*\\w*)\\s*<";
 				Pattern p = Pattern.compile(template);
-				Matcher m = p.matcher(pageHtml);		
-				if (m.find()) {
+				Matcher m = p.matcher(pageHtml);	
+				//Tokelau has no capital
+				if (((!country.equals("md") && !country.equals("tl")) && (!country.equals("up") && !country.equals("nr"))) && m.find()) {
 					String coordinates = m.group(1);
 					String[] coordinatesParts = coordinates.split(" ");
 					int negOrPosLat = 0;
@@ -102,9 +159,7 @@ public class CapitalCities {
 					float secondHalfOfLongitude = (float) (Float.parseFloat(coordinatesParts[4])/60.0);
 					float longitude = (firstHalfOfLongitude + secondHalfOfLongitude)*negOrPosLong;
 					countryToLong.put(countryCodeToCountry.get(country), longitude);	
-					
-					System.out.println(countryCodeToCountry.get(country) + "...lat: " + latitude + " ...long: " + longitude);
-					
+										
 				}
 				
 			} catch (IOException e) {
