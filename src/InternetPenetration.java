@@ -84,35 +84,40 @@ public class InternetPenetration {
 	}
 
 	private static float getInternetUsers(String pageHtml) {		
-		String template = "Internet\\susers:</a>\\s*.*\\s*.*\\s*.*\\s*.*\\s*.*(\\s*.*\\s*).*";
-		Pattern p = Pattern.compile(template);
-		Matcher m = p.matcher(pageHtml);		
-		if (m.find()) {
-			String users = m.group(1).trim();
-			//make format easier to work with
-			users = users.replace(",","");
-			String[] arguments = users.split(" ");
-			
-			//check if internet users are listed as NA
-			if (arguments[0].equals("NA")) {
-				return 0;
+		try {
+			String template = "Internet\\susers:</a>\\s*.*\\s*.*\\s*.*\\s*.*\\s*.*(\\s*.*\\s*).*";
+		
+			Pattern p = Pattern.compile(template);
+			Matcher m = p.matcher(pageHtml);		
+			if (m.find()) {
+				String users = m.group(1).trim();
+				//make format easier to work with
+				users = users.replace(",","");
+				String[] arguments = users.split(" ");
+				
+				//check if internet users are listed as NA
+				if (arguments[0].equals("NA")) {
+					return 0;
+				}
+				
+				//check for multiplicative factor
+				float multFactor = (float) 1.0;
+				if (arguments[1].contains("illion")) {
+					if (arguments[1].equals("million")) {
+						multFactor = (float) 1000000.0;
+					}
+					else if (arguments[1].equals("billion")) {
+						multFactor = (float) 1000000000.0;
+					}
+					else if (arguments[1].equals("trillion")) {
+						multFactor = (float) 1000000000000.0;
+					}
+				}
+				return (float)Float.parseFloat(arguments[0])*multFactor;
 			}
-			
-			//check for multiplicative factor
-			float multFactor = (float) 1.0;
-			if (arguments[1].contains("illion")) {
-				if (arguments[1].equals("million")) {
-					multFactor = (float) 1000000.0;
-				}
-				else if (arguments[1].equals("billion")) {
-					multFactor = (float) 1000000000.0;
-				}
-				else if (arguments[1].equals("trillion")) {
-					multFactor = (float) 1000000000000.0;
-				}
-			}
-			return (float)Float.parseFloat(arguments[0])*multFactor;
-		}		
+		} catch (Exception e) {
+			return 0;
+		}	
 		return 0;
 			
 	}

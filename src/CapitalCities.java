@@ -67,27 +67,68 @@ public class CapitalCities {
 	    while (iterWinner.hasNext()) {
 	        Map.Entry pairs = (Map.Entry)iterWinner.next();
 	        System.out.println(pairs.getKey());
-	        System.out.print("The latitude of " + pairs.getKey() + " is " + countryToLats.get(pairs.getKey()));
-	        System.out.println(" and the longitude is " + countryToLongs.get(pairs.getKey()));
+	        System.out.print("The latitude of " + pairs.getKey() + " is " + fixLat(countryToLats.get(pairs.getKey())));
+	        System.out.println(" and the longitude is " + fixLong(countryToLongs.get(pairs.getKey())));
 	        System.out.print("There are " + largestNumberOfCloseCapitals + " countries/capitals within ");
 	        System.out.println("10 degrees of latitude and longitude. Here is the list:");
 	        //iterate through all of the close countries
 	        
 	        for (String curCountry : ((ArrayList<String>) pairs.getValue())) {
 	        	String curCapital = getCapital(countryToCode.get(curCountry), countryUrlTemplate);
+	        	Float curLat = countryToLats.get(curCountry);
+	        	String updatedLat = fixLat(curLat);
+	        	updatedLat = updatedLat.replace("-", "");
+	        	
+	        	Float curLong = countryToLongs.get(curCountry);
+	        	String updatedLong = fixLong(curLong);
+	        		        	
 	        	System.out.println("Country: " + curCountry + " | capital: " + curCapital + 
-	        			" | latitude: " + countryToLats.get(curCountry) + " | longitude: " + countryToLongs.get(curCountry));
-	        }
-	        
+	        			" | latitude: " + updatedLat + " | longitude: " + updatedLong);
+	        }	        
 	        iterWinner.remove(); // avoids a ConcurrentModificationException
 	    }		
 		
 	    Reset.reset(countryCodes, countryCodeToCountry, countryToCode, countryUrlTemplate);	
 	}
 
+	private static String fixLong(Float curLong) {
+		String tempLong = Float.toString(curLong);
+		tempLong = tempLong.replace(".", " ");
+		String[] longParts = tempLong.split(" ");
+		String secondPartOfLong = Float.toString((float) (Float.parseFloat("0." + longParts[1])*60.0));
+		secondPartOfLong = secondPartOfLong.split("\\.")[0];
+		String direction = "";
+		if (Float.parseFloat(longParts[0] + ".0") < 0) {
+			direction = "W";
+		}
+		else {
+			direction = "E";
+		}
+		String output = longParts[0] + " " + secondPartOfLong + " " + direction;
+		output = output.replace("-", "");
+		return output;		
+	}
+
+	private static String fixLat(Float curLat) {
+		String tempLat = Float.toString(curLat);
+		tempLat = tempLat.replace(".", " ");
+		String[] latParts = tempLat.split(" ");
+		String secondPartOfLat = Float.toString((float) (Float.parseFloat("0." + latParts[1])*60.0));
+		secondPartOfLat = secondPartOfLat.split("\\.")[0];
+		String direction = "";
+		if (Float.parseFloat(latParts[0] + ".0") < 0) {
+			direction = "S";
+		}
+		else {
+			direction = "N";
+		}
+		String output = latParts[0] + " " + secondPartOfLat + " " + direction;
+		output = output.replace("-", "");
+		return output;		
+	}
+
 	private static String getCapital(String country, String urlTemplate) {
 		String curCountryURL = urlTemplate + country + ".html";
-		System.out.println(curCountryURL);
 		
 		try {
 			Document countryPage = Jsoup.connect(curCountryURL).get();
@@ -98,12 +139,15 @@ public class CapitalCities {
 			Pattern p = Pattern.compile(template);
 			Matcher m = p.matcher(pageHtml);
 			if (m.find()) {
-				System.out.println(m.group(1));
+				String capital = m.group(1);
+				String[] capitalArr = capital.split(">");
+				capital = capitalArr[1].substring(0,capitalArr[1].length()-6);
+				return capital;
 			}
 		} catch (Exception e) {
 			System.out.println("Exception here");
 		}
-		return curCountryURL;		
+		return "";		
 	}
 
 	private static ArrayList<String> getCloseCountries(HashMap<String, Float> countryToLatitude,
@@ -134,6 +178,9 @@ public class CapitalCities {
 						tempLatCountryCode = (float) (360.0 + countryToLatitude.get(countryCodeToCountry.get(countryCode)));
 						updateCountryCodeLat = true;
 					}	
+				}
+				if (Math.abs(countryToLongitude.get(countryCodeToCountry.get(country))) > 170 
+						|| Math.abs(countryToLongitude.get(countryCodeToCountry.get(countryCode))) > 170) {
 					
 					//check for longitude global wraparound
 					if (countryToLongitude.get(countryCodeToCountry.get(country)) < -170) {
@@ -146,12 +193,14 @@ public class CapitalCities {
 						updateCountryCodeLong = true;
 					}	
 				}
+				
 				//normal case without global wraparound
 				else {
 					
 					
 					float latDifference = Math.abs(tempLatCountry - tempLatCountryCode);			
 					float longDifference = Math.abs(tempLongCountry - tempLongCountryCode);
+					
 					if (latDifference < 10.0 && longDifference < 10.0) {
 						//check that the current country isn't the same as the country of interest
 						if (!countryCode.equals(country)) {

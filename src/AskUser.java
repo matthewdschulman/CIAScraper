@@ -94,8 +94,8 @@ public class AskUser {
 		}
 		
 		if (researchTopic.equals("pp")) {
-			System.out.println("Are you happy with searching for the top 10 political "
-					+ "parties in "+userRegion+" ? Please enter 'y' or 'n'.");
+			System.out.println("Are you happy with searching for the countries in "
+					+ userRegion + " with more than 10 political parties? Please enter 'y' or 'n'.");
 			String userResponse = user_input.nextLine();
 			if (userResponse.equals("n")) {
 				System.out.println("Sorry--please email matthewdschulman@gmail.com to request"

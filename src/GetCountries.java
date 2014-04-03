@@ -53,7 +53,8 @@ public class GetCountries {
 		junk.add("dx");
 		junk.add("hm");
 		junk.add("od");
-		junk.add("mk");		
+		junk.add("mk");	
+		junk.add("pc");	
 		removeJunk(countryCodes, junk);
 		removeJunk(codeToCountry, junk);
 		
